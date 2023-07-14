@@ -10,7 +10,9 @@ export function Calendar() {
   const [inputDate, setInputDate] = useState(null);
   const datePass = (day) => {
     setInputDate(day.date);
-    inputView();
+    if (!isShow) {
+      inputView();
+    }
   };
 
   // 表示切り替えのトグルスイッチ
@@ -110,11 +112,7 @@ export function Calendar() {
                                 </span>
                               </div>
                               {isShow && inputDate == day.date && (
-                                <Input
-                                  date={day.date}
-                                  isShow={isShow}
-                                  inputView={inputView}
-                                />
+                                <Input date={day.date} inputView={inputView} />
                               )}
                             </td>
                           );
@@ -140,11 +138,7 @@ export function Calendar() {
                             </span>
                           </div>
                           {isShow && inputDate == thisWeek.date && (
-                            <Input
-                              date={thisWeek.date}
-                              isShow={isShow}
-                              inputView={inputView}
-                            />
+                            <Input date={thisWeek.date} inputView={inputView} />
                           )}
                         </td>
                       );

@@ -10,11 +10,11 @@ export function Input(props) {
   const [end, setEnd] = useState(ends[0]);
 
   const addData = () => {
-    props.inputView;
+    props.inputView();
   };
 
   const closeInput = () => {
-    props.inputView;
+    props.inputView();
   };
 
   return (
