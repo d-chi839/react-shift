@@ -1,41 +1,26 @@
 "use client";
 
+import classes from "./Calendar.module.css";
 import { DateTime } from "luxon";
-import { Input } from "./Input";
+import { Input } from "../Input";
 import { useState } from "react";
 
 export function Calendar() {
-  const [inputedName, setInputName] = useState("");
-  const [inputedStart, setInputStart] = useState("");
-  const [inputedEnd, setInputEnd] = useState("");
-  const [showInput, setShowInput] = useState(false);
-
-  const handleAddData = (name, start, end) => {
-    setInputName(name);
-    setInputStart(start);
-    setInputEnd(end);
-    setShowInput(true);
-  };
-
-  const [inputDate, setInputDate] = useState("");
+  // tdをクリックしたときにinputDateに日付を入れる処理
+  const [inputDate, setInputDate] = useState(null);
   const datePass = (day) => {
     setInputDate(day.date);
-    setShowInput(true);
-  };
-
-  const [inputWeekDate, setInputWeekDate] = useState("");
-  const weekDatePass = (thisWeek) => {
-    setInputWeekDate(thisWeek.day);
-  };
-
-  const handleShowInput = (showInput) => {
-    setShowInput(showInput);
+    inputView();
   };
 
   // 表示切り替えのトグルスイッチ
   const [viewSwitch, setViewSwitch] = useState(true);
-  const toggleView = () => {
-    setViewSwitch((ViewSwitch) => !viewSwitch);
+  const toggleView = () => setViewSwitch(!viewSwitch);
+
+  // Inputコンポーネントの表示切り替え
+  const [isShow, setIsShow] = useState(false);
+  const inputView = () => {
+    setIsShow((inputView) => !inputView);
   };
 
   // カレンダー関係
@@ -70,7 +55,10 @@ export function Calendar() {
   let thisWeekStart = date.startOf("week");
   const thisWeekEnd = date.endOf("week");
   while (thisWeekStart <= thisWeekEnd) {
-    thisWeeks.push(thisWeekStart);
+    thisWeeks.push({
+      date: thisWeekStart.toFormat("yyyy年MM月dd日"),
+      day: thisWeekStart.day,
+    });
     thisWeekStart = thisWeekStart.plus({ day: 1 });
   }
 
@@ -79,30 +67,21 @@ export function Calendar() {
 
   return (
     <>
-      <div>
-        <div className="flex justify-between">
+      <div className={classes.calendar}>
+        <div className={classes.calendar__head}>
           <h2>
             <span className="mr-3">{currentMonth}</span>
             <span>{currentYear}</span>
           </h2>
-          <div>
-            <label>
-              <input
-                className="peer sr-only"
-                id="view"
-                onClick={toggleView}
-                type="checkbox"
-              ></input>
-              <span
-                className="block w-[2em] cursor-pointer bg-gray-500 rounded-full 
-                p-[1px] after:block after:h-[1em] after:w-[1em] after:rounded-full 
-                after:bg-white after:transition peer-checked:bg-blue-500 
-                peer-checked:after:translate-x-[calc(100%-2px)]"
-              />
+          <div className={classes.switchArea}>
+            <input onClick={toggleView} type="checkbox" id="view" />
+            <label for="view">
+              <span></span>
             </label>
+            <div className={classes.swImg}></div>
           </div>
         </div>
-        <div>
+        <div className={classes.calendar__body}>
           <table>
             <thead>
               <tr>
@@ -125,14 +104,16 @@ export function Calendar() {
                               }}
                               key={index}
                             >
-                              {day.day}
-                              {showInput && inputDate === day.date && (
+                              <div className={classes.td__inner}>
+                                <span className={classes.calendar__date}>
+                                  {day.day}
+                                </span>
+                              </div>
+                              {isShow && inputDate == day.date && (
                                 <Input
-                                  displayDate={inputDate}
-                                  date={date}
-                                  addData={handleAddData}
-                                  show={handleShowInput}
-                                  setShowInput={setShowInput}
+                                  date={day.date}
+                                  isShow={isShow}
+                                  inputView={inputView}
                                 />
                               )}
                             </td>
@@ -149,26 +130,21 @@ export function Calendar() {
                       return (
                         <td
                           onClick={() => {
-                            weekDatePass(thisWeek);
+                            datePass(thisWeek);
                           }}
                           key={index}
                         >
-                          {thisWeek.day}
-                          {showInput && inputDate === day.date && (
+                          <div className={classes.td__inner}>
+                            <span className={classes.calendar__date}>
+                              {thisWeek.day}
+                            </span>
+                          </div>
+                          {isShow && inputDate == thisWeek.date && (
                             <Input
-                              displayDate={inputDate}
-                              date={date}
-                              addData={handleAddData}
-                              show={handleShowInput}
-                              setShowInput={handleShowInput}
+                              date={thisWeek.date}
+                              isShow={isShow}
+                              inputView={inputView}
                             />
-                          )}
-                          {inputedName && (
-                            <>
-                              <p>{inputedName}</p>
-                              <p>{inputedStart}</p>
-                              <p>{inputedEnd}</p>
-                            </>
                           )}
                         </td>
                       );
