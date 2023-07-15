@@ -1,6 +1,7 @@
 /* Calendar */
 .calendar {
-  width: 800px;
+  width: 100%;
+  height: 100%;
 }
 
 /* Calendar Head */
@@ -87,8 +88,9 @@
 }
 
 .calendar__body tbody td {
-  height: 100px;
+  height: 130px;
   border: 1px solid #fff;
+  width: calc(100% / 7);
 }
 
 .td__inner {
