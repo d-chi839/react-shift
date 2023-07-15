@@ -15,6 +15,15 @@ export function Calendar() {
     }
   };
 
+  const [name, setName] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+  const inputVal = (inputName, inputStart, inputEnd) => {
+    setName((name) => inputName);
+    setStart((start) => inputStart);
+    setEnd((end) => inputEnd);
+  };
+
   // 表示切り替えのトグルスイッチ
   const [viewSwitch, setViewSwitch] = useState(true);
   const toggleView = () => setViewSwitch(!viewSwitch);
@@ -110,9 +119,26 @@ export function Calendar() {
                                 <span className={classes.calendar__date}>
                                   {day.day}
                                 </span>
+                                {name != "" &&
+                                  start != "" &&
+                                  end != "" &&
+                                  inputDate == day.date && (
+                                    <ul>
+                                      <li>
+                                        <p>{name}</p>
+                                        <p>
+                                          {start} ~ {end}
+                                        </p>
+                                      </li>
+                                    </ul>
+                                  )}
                               </div>
                               {isShow && inputDate == day.date && (
-                                <Input date={day.date} inputView={inputView} />
+                                <Input
+                                  date={day.date}
+                                  inputView={inputView}
+                                  inputVal={inputVal}
+                                />
                               )}
                             </td>
                           );
@@ -136,9 +162,24 @@ export function Calendar() {
                             <span className={classes.calendar__date}>
                               {thisWeek.day}
                             </span>
+                            {name != "" &&
+                              start != "" &&
+                              end != "" &&
+                              inputDate == thisWeek.date && (
+                                <>
+                                  <p>{name}</p>
+                                  <p>
+                                    {start} ~ {end}
+                                  </p>
+                                </>
+                              )}
                           </div>
                           {isShow && inputDate == thisWeek.date && (
-                            <Input date={thisWeek.date} inputView={inputView} />
+                            <Input
+                              date={thisWeek.date}
+                              inputView={inputView}
+                              inputVal={inputVal}
+                            />
                           )}
                         </td>
                       );

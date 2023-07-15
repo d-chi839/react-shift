@@ -11,6 +11,7 @@ export function Input(props) {
 
   const addData = () => {
     props.inputView();
+    props.inputVal(name, start, end);
   };
 
   const closeInput = () => {
