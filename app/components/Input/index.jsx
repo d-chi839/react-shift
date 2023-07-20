@@ -5,13 +5,21 @@ export function Input(props) {
   const starts = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
   const ends = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
 
-  const [name, setName] = useState("");
-  const [start, setStart] = useState(starts[0]);
-  const [end, setEnd] = useState(ends[0]);
+  const [inputData, setInputData] = useState([
+    { name: "", start: "", end: "" },
+  ]);
 
-  const addData = () => {
+  const handleInputChange = (e) => {
+    setInputData({
+      ...inputData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = () => {
+    props.onData(inputData);
     props.inputView();
-    props.inputVal(name, start, end);
+    setInputData({ name: "", start: "", end: "" });
   };
 
   const closeInput = () => {
@@ -25,9 +33,10 @@ export function Input(props) {
         <div className={classes.input__name}>
           <label>名前：</label>
           <input
+            name="name"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={inputData.name}
+            onChange={handleInputChange}
           />
         </div>
         <div className={classes.input__time}>
@@ -35,9 +44,10 @@ export function Input(props) {
           <select
             name="start"
             id="time"
-            value={start}
-            onChange={(e) => setStart(parseInt(e.target.value))}
+            value={inputData.start}
+            onChange={handleInputChange}
           >
+            <option value="">選択してください</option>
             {starts.map((start, index) => {
               return (
                 <option key={index} value={start}>
@@ -50,9 +60,10 @@ export function Input(props) {
           <select
             name="end"
             id="time"
-            value={end}
-            onChange={(e) => setEnd(parseInt(e.target.value))}
+            value={inputData.end}
+            onChange={handleInputChange}
           >
+            <option value="">選択してください</option>
             {ends.map((end, index) => {
               return (
                 <option key={index} value={end}>
@@ -63,7 +74,7 @@ export function Input(props) {
           </select>
         </div>
         <div>
-          <button className={classes.btn__add} onClick={addData}>
+          <button className={classes.btn__add} onClick={handleSubmit}>
             追加
           </button>
           <button className={classes.btn__close} onClick={closeInput}>

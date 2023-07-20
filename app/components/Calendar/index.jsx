@@ -4,6 +4,7 @@ import classes from "./Calendar.module.css";
 import { DateTime } from "luxon";
 import { Input } from "../Input";
 import { useState } from "react";
+import { DataDisplay } from "../DataDisplay";
 
 export function Calendar() {
   // tdをクリックしたときにinputDateに日付を入れる処理
@@ -15,13 +16,10 @@ export function Calendar() {
     }
   };
 
-  const [name, setName] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
-  const inputVal = (inputName, inputStart, inputEnd) => {
-    setName((name) => inputName);
-    setStart((start) => inputStart);
-    setEnd((end) => inputEnd);
+  // 子コンポーネントからデータを受け取る
+  const [data, setData] = useState([]);
+  const handleData = (childData) => {
+    setData((prevData) => [...prevData, childData]);
   };
 
   // 表示切り替えのトグルスイッチ
@@ -86,7 +84,7 @@ export function Calendar() {
           </h2>
           <div className={classes.switchArea}>
             <input onClick={toggleView} type="checkbox" id="view" />
-            <label for="view">
+            <label htmlFor="view">
               <span></span>
             </label>
             <div className={classes.swImg}></div>
@@ -119,25 +117,15 @@ export function Calendar() {
                                 <span className={classes.calendar__date}>
                                   {day.day}
                                 </span>
-                                {name != "" &&
-                                  start != "" &&
-                                  end != "" &&
-                                  inputDate == day.date && (
-                                    <ul>
-                                      <li>
-                                        <p>{name}</p>
-                                        <p>
-                                          {start} ~ {end}
-                                        </p>
-                                      </li>
-                                    </ul>
-                                  )}
+                                {inputDate == day.date && (
+                                  <DataDisplay data={data} />
+                                )}
                               </div>
                               {isShow && inputDate == day.date && (
                                 <Input
                                   date={day.date}
                                   inputView={inputView}
-                                  inputVal={inputVal}
+                                  onData={handleData}
                                 />
                               )}
                             </td>
@@ -162,23 +150,15 @@ export function Calendar() {
                             <span className={classes.calendar__date}>
                               {thisWeek.day}
                             </span>
-                            {name != "" &&
-                              start != "" &&
-                              end != "" &&
-                              inputDate == thisWeek.date && (
-                                <>
-                                  <p>{name}</p>
-                                  <p>
-                                    {start} ~ {end}
-                                  </p>
-                                </>
-                              )}
+                            {inputDate == thisWeek.date && (
+                              <DataDisplay data={data} />
+                            )}
                           </div>
                           {isShow && inputDate == thisWeek.date && (
                             <Input
                               date={thisWeek.date}
                               inputView={inputView}
-                              inputVal={inputVal}
+                              onData={handleData}
                             />
                           )}
                         </td>
